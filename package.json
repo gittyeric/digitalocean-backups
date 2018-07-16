@@ -1,0 +1,45 @@
+{
+  "name": "digitalocean-backups",
+  "version": "0.1.0",
+  "description": "Define backup policy for Digitalocean Droplets in Node.js and use a cron job to schedule runs",
+  "engineStrict": true,
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "devDependencies": {
+    "@types/jest": "~22.2.3",
+    "@types/leven": "^2.1.1",
+    "@types/node": "~8.10.10",
+    "jest": "~22.4.3",
+    "rimraf": "~2.6.2",
+    "ts-jest": "~22.4.4",
+    "tslint": "~5.9.1",
+    "tslint-microsoft-contrib": "~5.0.3",
+    "tsutils": "~2.26.2",
+    "typescript": "~2.8.3",
+    "uglifyjs": "^2.4.11",
+    "babel-jest": "^23.0.1"
+  },
+  "scripts": {
+    "clean": "rimraf coverage build tmp dist",
+    "build": "npm run build:ts && cp ./build/src/* ./dist -r",
+    "build:ts": "tsc -p tsconfig.release.json",
+    "deploy-dry": "npm run build & npm run lint & npm run test && git status",
+    "watch": "tsc -w -p tsconfig.release.json",
+    "lint": "tslint -t stylish --project \"tsconfig.json\"",
+    "pretest": "npm run lint",
+    "test": "npm run test-only",
+    "test-only": "jest --coverage",
+    "benchmark": "jest --coverage --config jest.benchmark.config.js",
+    "test:watch": "jest --watch"
+  },
+  "author": "Eric <git@letsmakeit.com>",
+  "license": "APLv2",
+  "dependencies": {
+    "@types/lodash": "^4.14.109",
+    "browserify": "^16.2.2",
+    "digitalocean": "^1.1.1",
+    "do-wrapper": "^3.14.2",
+    "minimist": "^1.2.0"
+  }
+}

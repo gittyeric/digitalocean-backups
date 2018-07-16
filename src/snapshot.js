@@ -1,0 +1,1 @@
+require('./index').Backups().takeSnapshotCmd();

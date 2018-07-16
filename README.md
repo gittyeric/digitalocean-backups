@@ -19,7 +19,7 @@ npm install
 
 Then get your (Digitalocean API)[''] token ready.
 
-Now you can run the cmd.js script on a regular basis (such as with crontab) to enforce a backup policy on DO:
+Now you can run the dist/backup.js script on a regular basis (such as with crontab) to enforce a backup policy on DO:
 DO NOT run this more than the snapshot timeUnit interval or you may get unexpected results!
 
 ## Command line Usage

@@ -60,7 +60,7 @@ const Backups = (token) => {
         const dateMs = date.getTime()
 
         // Delete up to 2 * snapshotKeepCount
-        for (let d = dateMs - policy.timeUnit * policy.snapshotKeepCount; d >= dateMs - (policy.timeUnit * policy.snapshotKeepCount) * 4; d -= timeUnit) {
+        for (let d = dateMs - policy.timeUnit * policy.snapshotKeepCount; d >= dateMs - (policy.timeUnit * policy.snapshotKeepCount) * 4; d -= policy.timeUnit) {
             staleNames.push(getDateStr(new Date(d), policy.timeUnit))
         }
 
@@ -117,7 +117,7 @@ const Backups = (token) => {
         const dropletId = parseOrThrowField('dropletId')
 
         const policy = createPolicy(dropletName, dropletId)
-        // Options fields
+        // Optional fields
         policy.timeUnit = parseInt(getCmdArg('timeUnit', policy.timeUnit))
         policy.snapshotKeepCount = parseInt(getCmdArg('snapshotKeepCount', policy.snapshotKeepCount))
 

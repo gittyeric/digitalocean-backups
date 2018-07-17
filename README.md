@@ -54,5 +54,5 @@ There's also takeSnapshot(dropletId, snapshotName) which returns a promise.
 For daily 2am snapshots, use something like:
 
 ```
-0 2 * * * node path/to/project/dist/backup.js --token="myDOApiToken" --dropletId="123" --dropletName="drippy" >> /var/log/do-backup.log
+0 2 * * * cd path/to/project/ && node dist/backup.js --token="myDOApiToken" --dropletId="123" --dropletName="drippy" >> /var/log/do-backup.log
 ```

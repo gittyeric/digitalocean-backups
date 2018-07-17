@@ -45,7 +45,7 @@ const Backups = (token) => {
         }
         const staleNames = [];
         const dateMs = date.getTime();
-        for (let d = dateMs - policy.timeUnit * policy.snapshotKeepCount; d >= dateMs - (policy.timeUnit * policy.snapshotKeepCount) * 4; d -= timeUnit) {
+        for (let d = dateMs - policy.timeUnit * policy.snapshotKeepCount; d >= dateMs - (policy.timeUnit * policy.snapshotKeepCount) * 4; d -= policy.timeUnit) {
             staleNames.push(getDateStr(new Date(d), policy.timeUnit));
         }
         const idsPromise = client.snapshots.list(1, policy.snapshotKeepCount + 10).then(snapshots => snapshots

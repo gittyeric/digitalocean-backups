@@ -37,7 +37,7 @@ const Backups = (token) => {
     const client = digitalocean.client(tokenToUse);
 
     const getDateStr = (now, timeUnit) => {
-        const strPieces = [now.getFullYear(), now.getMonth() + 1, now.getDate() + 1]
+        const strPieces = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
         if (timeUnit < DAY) {
             strPieces.push(now.getHours() + 1)
         }
@@ -61,25 +61,33 @@ const Backups = (token) => {
 
         // Delete up to 2 * snapshotKeepCount
         for (let d = dateMs - policy.timeUnit * policy.snapshotKeepCount; d >= dateMs - (policy.timeUnit * policy.snapshotKeepCount) * 4; d -= policy.timeUnit) {
-            staleNames.push(getDateStr(new Date(d), policy.timeUnit))
+            staleNames.push(policy.dropletName + '-' + getDateStr(new Date(d), policy.timeUnit))
         }
 
-        const idsPromise = client.snapshots.list(1, policy.snapshotKeepCount + 10).then(snapshots =>
+        const idsPromise = client.droplets.snapshots(policy.dropletId, 1, policy.snapshotKeepCount + 10)
+          .then(snapshots =>
             snapshots
-                .filter(snapshot => snapshot.name in staleNames)
-                .map(snapshot => snapshot.id))
+                .filter((snapshot) => {
+			const matches = staleNames.indexOf(snapshot.name) >= 0;
+			if (matches) {
+				console.log(`Deleting ${snapshot.name}`)
+			}
+			return matches
+		})
+                .map(snapshot => snapshot.id)
+          )
 
-        const toAwait = []
-        const deletionPromises = idsPromise.then(ids =>
-            ids.forEach(id =>
-                toAwait.push(client.snapshot.delete(id))))
+        const toAwait = idsPromise.then(ids =>
+            ids.map(id => client.snapshots.delete(id)
+	))
 
-        return Promise.all(toAwait).then(results => {
-            console.log(`Deleted ${toAwait.length} snapshots`)
-        })
-            .catch(e => {
-                `Could not delete snapshot ${e}`
-            })
+        return toAwait
+		.then(results => {
+            		console.log(`Deleted ${results.length} snapshots`)
+        	})
+            	.catch(e => {
+                	`Could not delete snapshot ${e}`
+            	})
     };
 
     // Be sure to only run this once every policy.timeUnit milliseconds or you'll get unexpected behavior!

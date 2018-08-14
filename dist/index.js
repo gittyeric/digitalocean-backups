@@ -96,7 +96,9 @@ const Backups = (token) => {
         return runPolicy(policy);
     };
     const takeSnapshot = (dropletId, name) => {
-        return client.droplets.snapshot(dropletId);
+        return client.droplets.snapshot(dropletId, name).then(() => {
+            console.log(`Took snapshot ${name}`);
+        });
     };
     const takeSnapshotCmd = () => {
         const name = parseOrThrowField('name');

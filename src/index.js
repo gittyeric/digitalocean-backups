@@ -133,7 +133,9 @@ const Backups = (token) => {
     }
 
     const takeSnapshot = (dropletId, name) => {
-        return client.droplets.snapshot(dropletId)
+        return client.droplets.snapshot(dropletId, name).then(() => {
+            console.log(`Took snapshot ${name}`)
+        })
     }
 
     // Take a snapshot from command line
